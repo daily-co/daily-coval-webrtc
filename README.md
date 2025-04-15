@@ -1,10 +1,8 @@
-# Pipecat Cloud Starter Project
+# daily-coval-webrtc
 
 [![Docs](https://img.shields.io/badge/Documentation-blue)](https://docs.pipecat.daily.co) [![Discord](https://img.shields.io/discord/1217145424381743145)](https://discord.gg/dailyco)
 
 A template voice agent for [Pipecat Cloud](https://www.daily.co/products/pipecat-cloud/) that demonstrates building and deploying a conversational AI agent.
-
-> **For a detailed step-by-step guide, see our [Quickstart Documentation](https://docs.pipecat.daily.co/quickstart).**
 
 ## Prerequisites
 
@@ -191,6 +189,42 @@ For more details on Pipecat Cloud and its capabilities:
 - [Pipecat Cloud Documentation](https://docs.pipecat.daily.co)
 - [Pipecat Project Documentation](https://docs.pipecat.ai)
 
-## Support
+## Running a deployed agent for testing
+generate a url to interact with the agent
+```
+curl -s --request POST \
+--url "https://api.pipecat.daily.co/v1/public/daily-coval-webrtc/start" \
+--header "authorization: Bearer $PCC_API_KEY" \
+--header 'content-type: application/json' \
+--data '{
+  "createDailyRoom": true,
+  "dailyRoomProperties": { "start_video_off": true, "enable_chat": true },
+  "body": {"coval": true}
+}' |jq -r '(.dailyRoom | tostring) + "?t=" + (.dailyToken | tostring)'
+```
+==>
+https://cloud-domain4565.daily.co/randomroomname?t=tokeneyJhbGciOi...
 
-Join our [Discord community](https://discord.gg/dailyco) for help and discussions.
+## ignore
+
+### notes to self
+```
+docker build --platform=linux/arm64 -t daily-coval-webrtc:latest .
+docker tag daily-coval-webrtc:latest vipipecat/daily-coval-webrtc:0.1
+docker push vipipecat/daily-coval-webrtc:0.1
+
+pcc secrets set daily-coval-webrtc-agent-secrets --file .env
+
+pcc deploy daily-coval-webrtc \
+vipipecat/daily-coval-webrtc:0.1 \
+--min-instances 0 \
+--secrets daily-coval-webrtc-agent-secrets
+
+pcc agent status daily-coval-webrtc
+
+pcc organizations keys create
+pcc organizations keys use
+
+pcc agent start daily-coval-webrtc
+```
+
