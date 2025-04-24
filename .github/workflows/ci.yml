@@ -1,0 +1,49 @@
+name: Pipecat Cloud Monitoring
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    inputs:
+      placeholder:
+        description: 'placeholder'
+        default: ''
+        required: false
+        type: string
+
+jobs:
+  monitor-evaluation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EVAL_CONFIG: |
+        {
+          "created_by": "~ ~ t h e ~ u n i v e r s e ~ ~",
+          "test_set_name": "Test Pipecat - CI",
+          "template_name": "Pipecat Cloud Coval Test - CI",
+          "model": {
+            "type": "MODEL_TYPE_DAILY",
+            "config": {
+              "pipecat_api_key": "${{ secrets.PIPECAT_CLOUD_PUBLIC_API_KEY }}",
+              "agent_name": "daily-coval-webrtc"
+            }
+          },
+          "metrics": {
+            "metric_type_Kj7mNpWx_unresponsive-agent": {},
+            "metric_type_time_to_first_audio": {}
+          },
+          "customer_metadata": { "branch": "${{ github.ref_name }}" }
+        }
+
+    steps:
+      - id: checkout-scripts
+        name: checkout scripts directory
+        uses: actions/checkout@v4
+        with:
+          repository: 'daily-co/daily-coval-webrtc'
+          path: ./scripts
+      - name: launch-and-monitor-evaluation
+        name: Launch and monitor evaluation
+        shell: bash
+        run: |
+          ./launch_and_monitor_eval.sh "${EVAL_CONFIG}" "${{ secrets.COVAL_API_KEY }}"

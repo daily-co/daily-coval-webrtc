@@ -210,14 +210,14 @@ https://cloud-domain4565.daily.co/randomroomname?t=tokeneyJhbGciOi...
 ### notes to self
 ```
 docker build --platform=linux/arm64 -t daily-coval-webrtc:latest .
-docker tag daily-coval-webrtc:latest vipipecat/daily-coval-webrtc:0.1
-docker push vipipecat/daily-coval-webrtc:0.1
+docker tag daily-coval-webrtc:latest vipipecat/daily-coval-webrtc:0.2
+docker push vipipecat/daily-coval-webrtc:0.2
 
 pcc secrets set daily-coval-webrtc-agent-secrets --file .env
 
 pcc deploy daily-coval-webrtc \
-vipipecat/daily-coval-webrtc:0.1 \
---min-instances 0 \
+vipipecat/daily-coval-webrtc:0.2 \
+--min-instances 1 \
 --secrets daily-coval-webrtc-agent-secrets
 
 pcc agent status daily-coval-webrtc
