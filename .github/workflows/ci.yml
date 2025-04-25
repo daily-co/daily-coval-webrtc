@@ -1,8 +1,8 @@
 name: Pipecat Cloud Monitoring
 
 on:
-  schedule:
-    - cron: '0 * * * *'
+  # schedule:
+  #   - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       placeholder:
@@ -42,7 +42,7 @@ jobs:
         with:
           repository: 'daily-co/daily-coval-webrtc'
           path: ./scripts
-      - name: launch-and-monitor-evaluation
+      - id: launch-and-monitor-evaluation
         name: Launch and monitor evaluation
         shell: bash
         run: |
