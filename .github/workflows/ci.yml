@@ -19,7 +19,7 @@ jobs:
       EVAL_CONFIG: |
         {
           "created_by": "~ ~ t h e ~ u n i v e r s e ~ ~",
-          "test_set_name": "Test Pipecat - CI",
+          "test_set_name": "ci test",
           "template_name": "Pipecat Cloud Coval Test - CI",
           "model": {
             "type": "MODEL_TYPE_DAILY",
@@ -41,9 +41,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'daily-co/daily-coval-webrtc'
-          path: ./scripts
       - id: launch-and-monitor-evaluation
         name: Launch and monitor evaluation
         shell: bash
         run: |
-          ./launch_and_monitor_eval.sh "${EVAL_CONFIG}" "${{ secrets.COVAL_API_KEY }}"
+          ./scripts/launch_and_monitor_eval.sh "${EVAL_CONFIG}" "${{ secrets.COVAL_API_KEY }}"

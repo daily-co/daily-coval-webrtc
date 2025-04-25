@@ -1,16 +1,19 @@
+#! /bin/bash
+
 set -euo pipefail
 
 EVAL_CONFIG="$1"
 COVAL_API_KEY="$2"
 
-COVAL_API_ENDPOINT="https://api.coval.dev/eval/run"
+COVAL_API_EVAL_ENDPOINT="https://api.coval.dev/eval"
+COVAL_API_RUN_ENDPOINT="${COVAL_API_EVAL_ENDPOINT}/run"
 
 function fetch_metrics_results() {
   local run_id=$1
   echo "Fetching results for run $run_id..."
   results=$(curl -sfSL \
     -H "x-api-key: ${COVAL_API_KEY}" \
-    "${COVAL_API_ENDPOINT}?type=metrics&run_id=$run_id")
+    "${COVAL_API_RUN_ENDPOINT}?type=metrics&run_id=$run_id")
   echo "Results:"
   echo "$results" | jq '.'
   exit 0
@@ -20,7 +23,8 @@ response=$(curl -sfSL \
   -H "x-api-key: ${COVAL_API_KEY}" \
   -H "Content-Type: application/json" \
   --data-raw "${EVAL_CONFIG}" \
-  https://api.coval.dev/eval)
+  "${COVAL_API_EVAL_ENDPOINT}")
+echo "response"
 echo $response
 
 eval_id=$(jq -r '.run_id // empty' <<<"$response")
@@ -35,7 +39,7 @@ start=$(date +%s)
 while :; do
   status=$(curl -sfSL \
     -H "x-api-key: ${COVAL_API_KEY}" \
-    "${COVAL_API_ENDPOINT}?run_id=$eval_id" | jq -r '.status')
+    "${COVAL_API_RUN_ENDPOINT}?run_id=$eval_id" | jq -r '.status')
 
   case $status in
     COMPLETED)
