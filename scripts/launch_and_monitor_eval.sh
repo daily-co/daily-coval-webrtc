@@ -27,6 +27,9 @@ response=$(curl -sfSL \
 echo "response"
 echo $response
 
+run_id=$(echo "$response" |jq -r '.run_id')
+echo "watch test run at:: https://app.coval.dev/daily/runs/${run_id}"
+
 eval_id=$(jq -r '.run_id // empty' <<<"$response")
 
 if [[ -z "$eval_id" ]]; then
