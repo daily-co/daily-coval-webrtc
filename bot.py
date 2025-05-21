@@ -98,20 +98,22 @@ async def main(room_url: str, token: str):
         logger.info("First participant joined: {}", participant["id"])
         await transport.capture_participant_transcription(participant["id"])
         # Kick off the conversation.
-        messages.append(
-            {
-                "role": "system",
-                "content": "Please start with 'Hello World' and introduce yourself to the user.",
-            }
-        )
-        await task.queue_frames([LLMMessagesFrame(messages)])
+        await task.queue_frames([context_aggregator.user().get_context_frame()])
+        # messages.append(
+        #     {
+        #         "role": "system",
+        #         "content": "Please start with 'Hello World' and introduce yourself to the user.",
+        #     }
+        # )
+        # await task.queue_frames([LLMMessagesFrame(messages)])
 
     @transport.event_handler("on_participant_left")
     async def on_participant_left(transport, participant, reason):
         logger.info("Participant left: {}", participant)
         await task.cancel()
 
-    runner = PipelineRunner()
+    runner = PipelineRunner(handle_sigint=False, force_gc=True)
+    # runner = PipelineRunner()
 
     await runner.run(task)
 

@@ -29,7 +29,7 @@ async def configure_with_args(aiohttp_session: aiohttp.ClientSession = None):
     )
 
     room = await daily_rest_helper.create_room(
-        DailyRoomParams(properties={"enable_prejoin_ui": False})
+        DailyRoomParams(properties={"enable_prejoin_ui": False, "start_video_off": True, "start_audio_off": True})
     )
     if not room.url:
         raise HTTPException(status_code=500, detail="Failed to create room")
@@ -41,5 +41,9 @@ async def configure_with_args(aiohttp_session: aiohttp.ClientSession = None):
     expiry_time: float = 60 * 60
 
     token = await daily_rest_helper.get_token(url, expiry_time)
+    print(f"______________")
+    print(f"{url}")
+    print(f"{token}")
+    print(f"______________")
 
     return (url, token)
