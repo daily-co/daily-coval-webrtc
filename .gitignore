@@ -92,3 +92,5 @@ cython_debug/
 
 # Pipecat cloud
 .pcc-deploy.toml
+
+vipynenotes
