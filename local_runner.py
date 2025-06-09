@@ -7,7 +7,10 @@
 import os
 
 import aiohttp
-from pipecat.transports.services.helpers.daily_rest import DailyRESTHelper, DailyRoomParams
+from pipecat.transports.services.helpers.daily_rest import (
+    DailyRESTHelper,
+    DailyRoomParams,
+)
 
 
 async def configure(aiohttp_session: aiohttp.ClientSession):
@@ -16,6 +19,7 @@ async def configure(aiohttp_session: aiohttp.ClientSession):
 
 
 async def configure_with_args(aiohttp_session: aiohttp.ClientSession = None):
+    print(f"_____local_runner.py * configure_with_args:")
     key = os.getenv("DAILY_API_KEY")
     if not key:
         raise Exception(
@@ -29,7 +33,13 @@ async def configure_with_args(aiohttp_session: aiohttp.ClientSession = None):
     )
 
     room = await daily_rest_helper.create_room(
-        DailyRoomParams(properties={"enable_prejoin_ui": False, "start_video_off": True, "start_audio_off": True})
+        DailyRoomParams(
+            properties={
+                "enable_prejoin_ui": False,
+                "start_video_off": True,
+                "start_audio_off": False,
+            }
+        )
     )
     if not room.url:
         raise HTTPException(status_code=500, detail="Failed to create room")
