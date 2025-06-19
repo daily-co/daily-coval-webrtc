@@ -63,15 +63,15 @@ async def main(room_url: str, token: str):
     context = OpenAILLMContext(messages)
     context_aggregator = llm.create_context_aggregator(context)
 
-    # # RTVI events for Pipecat client UI
-    # rtvi = RTVIProcessor(config=RTVIConfig(config=[])) ####
+    # RTVI events for Pipecat client UI
+    rtvi = RTVIProcessor(config=RTVIConfig(config=[])) ####
 
     # A core voice AI pipeline
     # Add additional processors to customize the bot's behavior
     pipeline = Pipeline(
         [
             transport.input(),
-            # rtvi, ####
+            rtvi, ####
             stt,
             context_aggregator.user(),
             llm,
@@ -88,13 +88,13 @@ async def main(room_url: str, token: str):
             # enable_metrics=True,
             # enable_usage_metrics=True,
         ),
-        # observers=[RTVIObserver(rtvi)], ####
+        observers=[RTVIObserver(rtvi)], ####
     )
 
-    # @rtvi.event_handler("on_client_ready") ####
-    # async def on_client_ready(rtvi):
-    #     logger.debug("Client ready event received")
-    #     await rtvi.set_bot_ready()
+    @rtvi.event_handler("on_client_ready") ####
+    async def on_client_ready(rtvi):
+        logger.debug("Client ready event received")
+        await rtvi.set_bot_ready()
 
 
     @transport.event_handler("on_first_participant_joined")
@@ -124,7 +124,7 @@ async def bot(args: DailySessionArguments):
         body: The configuration object from the request body
         session_id: The session ID for logging
     """
-    logger.info(f"👾 Bot process initialized {args.room_url} {args.token}")
+    logger.info(f"RTVI back in👾 Bot process initialized {args.room_url} {args.token}")
 
     try:
         await main(args.room_url, args.token)
