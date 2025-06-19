@@ -65,6 +65,7 @@ async def main(room_url: str, token: str):
 
     # RTVI events for Pipecat client UI
     rtvi = RTVIProcessor(config=RTVIConfig(config=[])) ####
+    rtvi.set_errors_enabled(False) #### this _might_ be the secret sauce
 
     # A core voice AI pipeline
     # Add additional processors to customize the bot's behavior
@@ -124,7 +125,7 @@ async def bot(args: DailySessionArguments):
         body: The configuration object from the request body
         session_id: The session ID for logging
     """
-    logger.info(f"RTVI back in👾 Bot process initialized {args.room_url} {args.token}")
+    logger.info(f"RTVI with errors turned off 👾 Bot process initialized {args.room_url} {args.token}")
 
     try:
         await main(args.room_url, args.token)
