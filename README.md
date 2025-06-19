@@ -76,7 +76,7 @@ pip install -r requirements.txt
 Then, launch the bot.py script locally:
 
 ```bash
-LOCAL_RUN=1 python bot.py
+python bot.py
 ```
 
 ## Deploy & Run
